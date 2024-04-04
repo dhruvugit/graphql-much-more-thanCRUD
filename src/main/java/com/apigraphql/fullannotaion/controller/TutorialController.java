@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class TutorialController implements GraphQLQueryResolver {
 //        return tutorialService.createTutorial(title,authorId, description);
 //    }
 
+    @Secured("ROLE_USER")
     @MutationMapping
     public Tutorial createTutorial(@Argument Integer authorId, @Argument String title, @Argument String description){
         System.out.println("Vales passed to controller : " + title + authorId + description);

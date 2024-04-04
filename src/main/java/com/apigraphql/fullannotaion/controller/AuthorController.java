@@ -11,6 +11,8 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
@@ -36,6 +38,7 @@ public class AuthorController implements GraphQLQueryResolver {
     @Autowired
     private AuthorService authorService;
 
+    @Secured("ROLE_USER")
     @QueryMapping
     public Iterable<Author> findAllAuthors() {
         return authorService.findAllAuthors();
@@ -46,6 +49,7 @@ public class AuthorController implements GraphQLQueryResolver {
         return authorService.countAuthors();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @MutationMapping
     public Author createAuthor(@Argument String name,@Argument Integer age){
 
@@ -54,10 +58,16 @@ public class AuthorController implements GraphQLQueryResolver {
         return author;
     }
 
+
     @SubscriptionMapping
     public Publisher<Author> notifyAuthorRegister() {
         return authorPublisher;
     }
+
+
+
+//    @Secured("ROLE_USER")
+//    @PreAuthorize("hasRole('ADMIN')")
 
 
 
